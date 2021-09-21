@@ -1,0 +1,33 @@
+#!csharp
+
+using System.Text.RegularExpressions;
+
+#!csharp
+
+var text = "/xp foo";
+var trigger = "/xp";
+var commandPattern = String.Join("|", Enum.GetNames(typeof(Command))).ToLower();
+enum Command{ Plan, Spend, Level, Policy, EditPolicy, EditConfig, Help, LS, CS, SS, LN, LoginNext, Party};
+string commandRegex =
+    $"^(?:{trigger} (?<command>{commandPattern})) (?<params>.+)$|" +  //Command with params
+    $"^(?:{trigger} (?<command>{commandPattern}))$|" +  //Command no params
+    $"^(?:{trigger})$";                      //Just trigger-- could use this to match anything starting with the trigger but not matching a command
+                                             //Util.WriteToChat(commandRegex);
+var commandParser = new Regex(commandRegex, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+#!csharp
+
+var input = new string[]{"/xp plan test this out" };
+foreach(var i in input) {
+    var m = commandParser.Match(i);
+
+    if(m.Success) {
+        foreach(var g in m.Groups) {
+            display(g);
+        }
+        //display(m.Groups[1].Value);
+
+
+    }
+    return;
+}
