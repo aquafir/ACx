@@ -10,7 +10,7 @@ namespace ACxPlugin
 	/// http://acpedia.org/wiki/Landblock
 	/// π to put locations at end
 	/// </summary>
-	class LocationManager
+	class LocationTrigger
 	{
 		//CoordsObject
 		//o.Coordinates().DistanceToCoords

@@ -9,6 +9,7 @@ namespace ACxPlugin
 {
 	public static class Utils
 	{
+		public const string DEFAULT_TRIGGER = "/x";
 		public static string AssemblyDirectory { get; set; } = "";
 		public static string LogPath { get { return Path.Combine(AssemblyDirectory, "Exceptions.txt"); } }
 

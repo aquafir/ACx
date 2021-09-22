@@ -7,8 +7,8 @@
     <ProjectGuid>{945BE6DB-73A6-4E59-BB9A-D6F947DF720A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SillAC</RootNamespace>
-    <AssemblyName>SillAC</AssemblyName>
+    <RootNamespace>ACx</RootNamespace>
+    <AssemblyName>ACx</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

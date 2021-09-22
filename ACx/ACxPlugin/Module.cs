@@ -8,17 +8,14 @@ namespace ACxPlugin
 {
     public abstract class Module
     {
-        protected abstract FileSystemWatcher configWatcher { get; set; }
         /// <summary>
         /// Called once when the main plugin is loaded
         /// </summary>
-        public virtual void Startup() { 
-            
-        }
+        public abstract void Startup();
+
         /// <summary>
         /// Called when the main plugin is shutting down.  Unregister from any events here and do any cleanup.
         /// </summary>
         public abstract void Shutdown();
-
     }
 }

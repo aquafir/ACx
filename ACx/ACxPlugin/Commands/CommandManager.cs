@@ -70,23 +70,17 @@ namespace ACxPlugin
 
         private void ProcessCommand(Command command)
         {
-            //Just for testing, TODO: remove
-            var core = CoreManager.Current.Actions;
-            var player = CoreManager.Current.CharacterFilter;
-            var world = CoreManager.Current.WorldFilter;
             switch (command)
             {
+                //Aliases should be set equal to full command in the Command enum
                 case Command.AddParty:
-                case Command.AP:
-                    IBOverride.AddParty();
+                    PartyHelper.AddParty();
                     break;
                 case Command.LoadParty:
-                case Command.LP:
-                    IBOverride.SetParty();
+                    PartyHelper.LoadParty();
                     break;
                 case Command.PartyNearby:
-                case Command.PN:
-                    IBOverride.SetPartyNearby();
+                    PartyHelper.SetPartyNearby();
                     break;
                 case Command.Policy:
                     Plugin.Profile.ExpPolicy.PrintPolicy();
@@ -94,69 +88,43 @@ namespace ACxPlugin
                 case Command.Plan:
                     Plugin.Profile.ExpPolicy.PrintExperiencePlan();
                     break;
-                case Command.Spend:
-                case Command.Level:
+                case Command.LevelSlow:
                     Plugin.Profile.ExpPolicy.SpendExperience();
                     break;
-                case Command.LevelDump:
-                case Command.LD:
+                case Command.Level:
                     Plugin.Profile.ExpPolicy.SpendExperience(true);
                     break;
                 case Command.EditConfig:
-                case Command.EC:
                     try { Process.Start(Plugin.Profile.Path); }
                     catch (Exception e) { Utils.LogError(e); }
                     break;
                 case Command.EditPolicy:
-                case Command.EP:
                     try { Process.Start(Plugin.Profile.Path); }
                     catch (Exception e) { Utils.LogError(e); }
                     break;
                 case Command.PrintLogins:
                     LoginHelper.PrintLogins();
                     break;
-                case Command.Logs:
+                case Command.Log:
                     try {
                         Process.Start(Utils.LogPath);
                     }
                     catch (Exception e) { Utils.LogError(e); }
                     break;
                 case Command.SaveSpells:
-                case Command.SS:
                     Plugin.SpellManager.SaveAllSpells();
                     break;
                 case Command.ClearSpells:
-                case Command.CS:
                     Plugin.SpellManager.ClearAllSpells();
                     break;
                 case Command.LoadSpells:
-                case Command.LS:
                     Plugin.SpellManager.LoadSpells();
                     break;
-                case Command.BN:
-                    MacroManager.StartMacro(Macros.BlastNearest, 600);
-                    return;
-                case Command.BS:
-                    MacroManager.StartMacro(Macros.BlastSelected, 600);
-                    return;
-                case Command.Test:
-                    //Get the 
-//                    MacroManager.StartMacro(200);
-                    break;
-                case Command.T:
-                    var wand = world.GetByName("Wings of Rakhil").FirstOrDefault();
-                    var target = world.GetByObjectClass(ObjectClass.Monster).OrderBy(o => o.Coordinates().DistanceToCoords(world[player.Id].Coordinates())).FirstOrDefault();
-
-                    if (wand != null && target != null)
-                        core.UseItem(wand.Id, 1, 1);
-                    //core.UseItem(wand.Id, 1, 0);    //unequips wand
-                    //core.UseItem(wand.Id, 1, target.Id);
-                    break;
-                case Command.Pickup:
-                    //var core = CoreManager.Current.Actions;
-                    if (core.CurrentSelection != 0)
-                        core.MoveItem(core.CurrentSelection, CoreManager.Current.CharacterFilter.Id);
-                    break;
+                //case Command.Pickup:
+                //    //var core = CoreManager.Current.Actions;
+                //    if (core.CurrentSelection != 0)
+                //        core.MoveItem(core.CurrentSelection, CoreManager.Current.CharacterFilter.Id);
+                //    break;
                 case Command.Help:
                 default:
                     Utils.WriteToChat("Valid commands are: " + commandPattern);
@@ -170,24 +138,17 @@ namespace ACxPlugin
             switch (command)
             {
                 case Command.SaveSpells:
-                case Command.SS:
                     Plugin.SpellManager.SaveAllSpells(parameters);
                     break;
                 case Command.LoadSpells:
-                case Command.LS:
                     Plugin.SpellManager.LoadSpells(parameters);
                     break;
                 case Command.LoginNext:
-                case Command.LN:
                     LoginHelper.SetNextLogin(parameters, false);
                     break;
                 case Command.LoginNextLoop:
-                case Command.LNL:
                     LoginHelper.SetNextLogin(parameters, true);
                     break;
-                case Command.BN:
-                    MacroManager.StartMacro(Macros.BlastNearest, 600, int.Parse(parameters));
-                    return;
                 default:
                     Utils.WriteToChat("Valid commands are: " + commandPattern);
                     break;
@@ -196,7 +157,7 @@ namespace ACxPlugin
 
         public void SetupCommandParser()
         {
-            var trigger = Regex.Escape(Plugin.Config.Trigger) ?? "/xp";
+            var trigger = Regex.Escape(Plugin.Config.Trigger) ?? Utils.DEFAULT_TRIGGER;
             //Utils.WriteToChat("Trigger:" + trigger);
             string commandRegex =
                 $"^(?:{trigger} (?<command>{commandPattern})) (?<params>.+)$|" +  //Command with params

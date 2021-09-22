@@ -25,7 +25,7 @@ namespace ACxPlugin
 		public string Path { get { return System.IO.Path.Combine(Utils.AssemblyDirectory, DefaultConfigurationPath); } }
 		//[JsonIgnore]
 		//public string ProfilePath { get; set; }
-		public string Trigger { get; set; } = "/xp";
+		public string Trigger { get; set; } = Utils.DEFAULT_TRIGGER;
 		public int Interval { get; set; } = 150;
 
 		[JsonProperty("Profiles")]
@@ -61,7 +61,7 @@ namespace ACxPlugin
 						new ProfileSelector() { CharName = ".*Mule.*", Priority = 2, FriendlyName = "Stronk Mule", Path = System.IO.Path.Combine(DefaultProfileFolder, "Mule.json") }
 					},
 						Interval = 150,
-						Trigger = "/xp"
+						Trigger = Utils.DEFAULT_TRIGGER
 					};
 
 					try

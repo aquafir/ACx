@@ -12,33 +12,33 @@ namespace ACxPlugin
 	/// <summary>
 	/// Overrides values set in the configuration of IBControl
 	/// </summary>
-	class IBOverride
+	class PartyHelper
 	{
 		private static string PartyListPath { get { return Path.Combine(Utils.AssemblyDirectory, "Party.txt"); } }
+
+		
 		public static void SetPartyNearby()
 		{
-			//var playerCoords = new CoordsObject()
 			var wf = CoreManager.Current.WorldFilter;
-			//var partyLeader = "SomeName";
 			var partyLeader = CoreManager.Current.CharacterFilter.Name;
-
 			var player = CoreManager.Current.WorldFilter.GetByName(partyLeader).First();
 
+			//Get nearby players
 			var neighbors = wf.GetByObjectClass(ObjectClass.Player).OrderBy(o => o.Coordinates().DistanceToCoords(player.Coordinates())).ToArray();
 
-			//setvar[charlist, listcreate[]]
-			//listadd[getvar[charlist], X]
-
 			Utils.Mexec("setvar[charlist, listcreate[]]");
-			Utils.WriteToChat("Nearby players: " + neighbors.Length);
+			Utils.WriteToChat("Nearby players added to party: " + neighbors.Length);
 			for (int i = 0; i < neighbors.Length; i++)
 			{
-				Utils.WriteToChat($"Adding {neighbors[i].Name} to party.");
+				//Utils.WriteToChat($"Adding {neighbors[i].Name} to party.");
 				Utils.Mexec($"listadd[getvar[charlist], {neighbors[i].Name}]");
 			}
 		}
 
 		//Todo: implement retry logic
+		/// <summary>
+		/// Saves all characters on this account to Party.txt
+		/// </summary>
 		public static void AddParty()
 		{
 			if (!File.Exists(PartyListPath))
@@ -60,20 +60,11 @@ namespace ACxPlugin
 			File.AppendAllText(PartyListPath, additions.ToString());
 		}
 
-		public static void SetParty()
+		/// <summary>
+		/// Loads all characters in Party.txt and adds to UnlimitedIBControl
+		/// </summary>
+		public static void LoadParty()
 		{
-			//senddeathmessage
-			//permit
-			//tapercheck
-			//platscarabcheck
-			//manascarabcheck
-			//lowpackspace
-			//fellowname
-			//AutoCraft
-			//AutoReadContracts
-			//setvar[charlist, listcreat[]]
-			//listadd[getvar[charlist], X]
-
 			if (!File.Exists(PartyListPath))
 			{
 				Utils.WriteToChat("Creating party list: Party.txt");
@@ -89,5 +80,19 @@ namespace ACxPlugin
 				Utils.Mexec($"listadd[getvar[charlist], {member}]");
 			}
 		}
+
+		//Other things to set?
+		//senddeathmessage
+		//permit
+		//tapercheck
+		//platscarabcheck
+		//manascarabcheck
+		//lowpackspace
+		//fellowname
+		//AutoCraft
+		//AutoReadContracts
+		//setvar[charlist, listcreat[]]
+		//listadd[getvar[charlist], X]
+
 	}
 }
