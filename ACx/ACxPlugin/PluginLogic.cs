@@ -26,7 +26,6 @@ namespace ACxPlugin
 		private const int TIME_BETWEEN_PLUGIN_RELOAD = 5000;
 		private const int TIME_BETWEEN_RELOAD_ATTEMPTS = 1000;
 		[XmlIgnoreAttribute]
-		public string PluginAssemblyDirectory;
 		//[XmlIgnoreAttribute]
 		public bool IsFirstLogin { get; set; } = true;
 
@@ -36,15 +35,14 @@ namespace ACxPlugin
 		public Configuration Config { get; set; }
 		[XmlIgnoreAttribute]
 		public CharacterProfile Profile { get; set; }
-		[XmlIgnoreAttribute]
-		public CommandManager CommandManager { get; set; }
-		[XmlIgnoreAttribute]
-		public SpellTabManager SpellManager;
+
+		//Todo: Possibly move reload logic to Config/Profiles and have them request the PluginLogic reloads
 		private Timer reloadTimer;
 		private FileSystemWatcher profileWatcher;
 		private FileSystemWatcher configurationWatcher;
 
-
+		[XmlIgnoreAttribute]
+		private List<Module> modules;
 
 		private void CharacterFilter_LoginComplete(object sender, EventArgs e)
 		{
@@ -72,22 +70,12 @@ namespace ACxPlugin
 		{
 			try
 			{
+				//Config/Profiles
 				//Utils.WriteToChat("Loading configuration...");
 				Config = Configuration.LoadOrCreateConfiguration(this);
 				//Utils.WriteToChat("Finding character profile...");
 				Profile = Config.LoadOrCreateProfile();
 
-				//Utils.WriteToChat("Setting up command parser...");
-				CommandManager = new CommandManager(this);
-				CommandManager.SetupCommandParser();
-				//CoreManager.Current.CommandLineText += CommandManager.Core_CommandLineText;
-
-				//Utils.WriteToChat("Starting spell manager...");
-				SpellManager = new SpellTabManager(this);
-				SpellManager.Startup(Config.Interval);
-
-				//Utils.WriteToChat("Setting up experience policy...");
-				Profile.ExpPolicy.Startup(Config.Interval);
 				//Utils.WriteToChat($"Watching configuration for changes: {Path.GetDirectoryName(config.Path)}\t{Path.GetFileName(config.Path)})");
 				configurationWatcher = new FileSystemWatcher()
 				{
@@ -121,6 +109,14 @@ namespace ACxPlugin
 				reloadTimer = new Timer() { AutoReset = true, Enabled = false, Interval = TIME_BETWEEN_RELOAD_ATTEMPTS };
 				reloadTimer.Elapsed += TryReload;
 
+				//Modules
+				modules = new List<Module>();
+				modules.Add(new CommandManager(this));
+				modules.Add(new SpellTabManager(this));
+				modules.Add(new ExperienceManager(this));
+				foreach (var m in modules)
+					m.Startup();
+
 				Utils.WriteToChat("Successfully loaded!");
 			}
 			catch (Exception ex)
@@ -153,16 +149,11 @@ namespace ACxPlugin
 		}
 
 		#region Startup / Shutdown
-		/// <summary>
-		/// Called once when the plugin is loaded.  Loads modules.
-		/// </summary>
+		// Called once when the plugin is loaded.  Loads modules.
 		public void Startup(NetServiceHost host, CoreManager core, string pluginAssemblyDirectory, string accountName, string characterName, string serverName)
 		{
 			
 			Utils.AssemblyDirectory = pluginAssemblyDirectory;
-			//ExpTarget.Strength.AddExp(1898736729);
-			//core.Actions.AddSkillExperience(SkillType.di)
-			//Summoning = 54
 
 			//If the player is logged in and the plugin is reloaded reinitialize
 			if (Utils.IsLoggedIn())
@@ -199,16 +190,12 @@ namespace ACxPlugin
 		{
 			try
 			{
+				foreach (var m in modules)
+					m.Shutdown();
+
 				//Stop anything currently going on
 				//Utils.WriteToChat("Shutting down command manager...");
-				if (CommandManager != null)
-					CommandManager.Shutdown();
-				//Utils.WriteToChat("Shutting down spell manager...");
-				if (SpellManager != null)
-					SpellManager.Shutdown();
-				//Utils.WriteToChat("Shutting down XP manager...");
-				if (Profile != null && Profile.ExpPolicy != null)
-					Profile.ExpPolicy.Shutdown();
+
 				//Utils.WriteToChat("Removing timers...");
 				if (reloadTimer != null)
 					reloadTimer.Enabled = false;

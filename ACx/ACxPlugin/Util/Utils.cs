@@ -10,7 +10,9 @@ namespace ACxPlugin
 	public static class Utils
 	{
 		public const string DEFAULT_TRIGGER = "/x";
+		//Set when the plugin starts up
 		public static string AssemblyDirectory { get; set; } = "";
+		public static string ConfigPath { get { return Path.Combine(AssemblyDirectory, Configuration.DefaultConfigurationPath); } }
 		public static string LogPath { get { return Path.Combine(AssemblyDirectory, "Exceptions.txt"); } }
 
 		public static void LogError(Exception ex)

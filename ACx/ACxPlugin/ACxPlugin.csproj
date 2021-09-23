@@ -48,19 +48,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoXP\ExperiencePolicy.cs" />
     <Compile Include="Commands\Commands.cs" />
     <Compile Include="Config\CharacterProfile.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Util\DecalProxy.cs" />
-    <Compile Include="AutoXP\ExperiencePolicy.cs" />
+    <Compile Include="AutoXP\ExperienceManager.cs" />
     <Compile Include="AutoXP\ExpTarget.cs" />
     <Compile Include="Commands\PartyHelper.cs" />
     <Compile Include="Commands\LocationTrigger.cs" />
     <Compile Include="Commands\LoginHelper.cs" />
     <Compile Include="Commands\MacroManager.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="Plugin.cs" />
+    <Compile Include="Util\Plugin.cs" />
     <Compile Include="PluginLogic.cs" />
     <Compile Include="Config\ProfileSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

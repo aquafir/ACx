@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ACxPlugin.AutoXP;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,6 +64,7 @@ namespace ACxPlugin
 				Utils.LogError(ex);
 			}
 		}
+
 		public static CharacterProfile Default
 		{
 			get

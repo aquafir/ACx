@@ -9,7 +9,7 @@ using System.Timers;
 
 namespace ACxPlugin
 {
-    public class SpellTabManager
+    public class SpellTabManager : Module
     {
         //Might be wrong, but in testing only up to tab 7 was supported
         private static int MAX_SPELL_TAB = 7;
@@ -21,9 +21,7 @@ namespace ACxPlugin
         private int spellIndex { get; set; } = 0;
         private bool spellBarsEmpty = false;
 
-        public SpellTabManager(PluginLogic plugin) {
-            this.plugin = plugin;
-        }
+        public SpellTabManager(PluginLogic plugin) : base(plugin) { }
 
         private void SpendExperienceTick(object sender, ElapsedEventArgs e)
         {
@@ -63,21 +61,7 @@ namespace ACxPlugin
             return true;
         }
 
-        /// <summary>
-        /// Behavior when logging off.
-        /// </summary>
-        internal void Shutdown()
-        {
-            timer.Enabled = false;
-            timer.Elapsed -= SpendExperienceTick;
-        }
-        public void Startup(int interval)
-        {
-            timer = new Timer() { AutoReset = true, Enabled = false, Interval = interval };
-            timer.Elapsed += SpendExperienceTick;
-        }
-
-        public void SaveAllSpells()
+        public void SaveSpells()
         {
             SaveAllSpells(DEFAULT_SPELL_PATH);
         }
@@ -131,7 +115,6 @@ namespace ACxPlugin
                 CoreManager.Current.Actions.SpellTabDelete(tabNumber, tab[i]);
             }
         }
-
 
         #region Load Spells Details
         // Summary:
@@ -198,6 +181,23 @@ namespace ACxPlugin
                 Utils.LogError(ex);
 
             }
+        }
+
+
+        public static SpellTabManager Instance { get; set; }
+        public override void Startup()
+        {
+            //Utils.WriteToChat("Starting spell manager...");
+            Instance = this;
+            timer = new Timer() { AutoReset = true, Enabled = false, Interval = Plugin.Config.Interval };
+            timer.Elapsed += SpendExperienceTick;
+        }
+        public override void Shutdown()
+        {
+            //Utils.WriteToChat("Shutting down spell manager...");
+            Instance = null;
+            timer.Enabled = false;
+            timer.Elapsed -= SpendExperienceTick;
         }
     }
 }
