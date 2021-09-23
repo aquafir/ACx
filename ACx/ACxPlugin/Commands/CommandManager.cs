@@ -7,16 +7,12 @@ using Decal.Adapter.Wrappers;
 
 namespace ACxPlugin
 {
-    public class CommandManager
+    public class CommandManager : Module
     {
-        private PluginLogic Plugin;
         private Regex commandParser;
         private string commandPattern = String.Join("|", Enum.GetNames(typeof(Command)).OrderBy(x=>x).ToArray()).ToLower();
 
-        public CommandManager(PluginLogic plugin)
-        {
-            this.Plugin = plugin;
-        }
+        public CommandManager(PluginLogic plugin) : base(plugin) { }
 
         public void Core_CommandLineText(object sender, ChatParserInterceptEventArgs e)
         {
@@ -83,16 +79,16 @@ namespace ACxPlugin
                     PartyHelper.SetPartyNearby();
                     break;
                 case Command.Policy:
-                    Plugin.Profile.ExpPolicy.PrintPolicy();
+                    ExperienceManager.Instance?.PrintPolicy();
                     break;
                 case Command.Plan:
-                    Plugin.Profile.ExpPolicy.PrintExperiencePlan();
+                    ExperienceManager.Instance?.PrintExperiencePlan();
                     break;
                 case Command.LevelSlow:
-                    Plugin.Profile.ExpPolicy.SpendExperience();
+                    ExperienceManager.Instance?.SpendExperience();
                     break;
                 case Command.Level:
-                    Plugin.Profile.ExpPolicy.SpendExperience(true);
+                    ExperienceManager.Instance?.SpendExperience(true);
                     break;
                 case Command.EditConfig:
                     try { Process.Start(Plugin.Profile.Path); }
@@ -112,13 +108,13 @@ namespace ACxPlugin
                     catch (Exception e) { Utils.LogError(e); }
                     break;
                 case Command.SaveSpells:
-                    Plugin.SpellManager.SaveAllSpells();
+                    SpellTabManager.Instance?.SaveSpells();
                     break;
                 case Command.ClearSpells:
-                    Plugin.SpellManager.ClearAllSpells();
+                    SpellTabManager.Instance?.ClearAllSpells();
                     break;
                 case Command.LoadSpells:
-                    Plugin.SpellManager.LoadSpells();
+                    SpellTabManager.Instance?.LoadSpells();
                     break;
                 //case Command.Pickup:
                 //    //var core = CoreManager.Current.Actions;
@@ -138,10 +134,10 @@ namespace ACxPlugin
             switch (command)
             {
                 case Command.SaveSpells:
-                    Plugin.SpellManager.SaveAllSpells(parameters);
+                    SpellTabManager.Instance.SaveAllSpells(parameters);
                     break;
                 case Command.LoadSpells:
-                    Plugin.SpellManager.LoadSpells(parameters);
+                    SpellTabManager.Instance.LoadSpells(parameters);
                     break;
                 case Command.LoginNext:
                     LoginHelper.SetNextLogin(parameters, false);
@@ -155,7 +151,10 @@ namespace ACxPlugin
             }
         }
 
-        public void SetupCommandParser()
+        /// <summary>
+        /// Compiles regex to process commands and registers relevant event.
+        /// </summary>
+        private void SetupCommandParser()
         {
             var trigger = Regex.Escape(Plugin.Config.Trigger) ?? Utils.DEFAULT_TRIGGER;
             //Utils.WriteToChat("Trigger:" + trigger);
@@ -171,7 +170,12 @@ namespace ACxPlugin
             CoreManager.Current.CommandLineText += Core_CommandLineText;
         }
 
-        internal void Shutdown()
+		public override void Startup()
+		{
+            //Utils.WriteToChat("Setting up command parser...");
+            SetupCommandParser();
+		}
+        public override void Shutdown()
         {
             //Utils.WriteToChat("Shutting down command manager...");
             CoreManager.Current.CommandLineText -= Core_CommandLineText;

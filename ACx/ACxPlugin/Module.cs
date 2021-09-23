@@ -6,16 +6,23 @@ using System.Text;
 
 namespace ACxPlugin
 {
-    public abstract class Module
-    {
-        /// <summary>
-        /// Called once when the main plugin is loaded
-        /// </summary>
-        public abstract void Startup();
+	public abstract class Module
+	{
+		protected PluginLogic Plugin { get; set; }
 
-        /// <summary>
-        /// Called when the main plugin is shutting down.  Unregister from any events here and do any cleanup.
-        /// </summary>
-        public abstract void Shutdown();
-    }
+		public Module(PluginLogic plugin)
+		{
+			Plugin = plugin;
+		}
+
+		/// <summary>
+		/// Called once when the main plugin is loaded
+		/// </summary>
+		public virtual void Startup() { }
+
+		/// <summary>
+		/// Called when the main plugin is shutting down.  Unregister from any events here and do any cleanup.
+		/// </summary>
+		public virtual void Shutdown() { }
+	}
 }
