@@ -53,11 +53,12 @@
     <Compile Include="Config\CharacterProfile.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Location\LocationManager.cs" />
     <Compile Include="Util\DecalProxy.cs" />
     <Compile Include="AutoXP\ExperienceManager.cs" />
     <Compile Include="AutoXP\ExpTarget.cs" />
     <Compile Include="Commands\PartyHelper.cs" />
-    <Compile Include="Commands\LocationTrigger.cs" />
+    <Compile Include="Location\LocationTrigger.cs" />
     <Compile Include="Commands\LoginHelper.cs" />
     <Compile Include="Commands\MacroManager.cs" />
     <Compile Include="Module.cs" />

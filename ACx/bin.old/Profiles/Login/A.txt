@@ -1,0 +1,22 @@
+/echo /loadfile M:\Projects\AC\SillAC\SillAC\bin\Profiles\Login\A.txt
+/xp ln 1
+/vt nav load Swear
+/vt opt set OpenDoors TRUE
+/vt opt set DoorOpenRange .01
+/vt opt set DoorIDRange .011
+/vt opt set Recharge-Helper-HitP 0
+/vt opt set Recharge-Helper-Mana 0
+/vt opt set Recharge-Helper-Stam 0
+/vt opt set Recharge-Norm-HitP 1
+/vt opt set Recharge-Norm-Mana 1
+/vt opt set Recharge-Norm-Stam 1
+/vt opt set Recharge-NoTarg-HitP 0
+/vt opt set Recharge-NoTarg-Mana 0
+/vt opt set Recharge-NoTarg-Stam 0
+/vt opt set EnableBuffing FALSE
+/vt opt set EnableCombat FALSE
+/vt opt set EnableLooting FALSE
+/vt opt set EnableMeta FALSE
+/vt opt set EnableNav TRUE
+/vt opt set FollowAroundCorners TRUE
+/vt start

@@ -19,7 +19,7 @@ namespace ACxPlugin
 
         public static int? CostToLevel(this ExpTarget target, int offset = 0)
         {
-            var targetLevel = offset + target.GetTimesLeveled();
+             var targetLevel = offset + target.GetTimesLeveled();
             switch (target.TargetType())
             {
                 //Offset target level by one to avoid trying to level the last, since it can overshoot.

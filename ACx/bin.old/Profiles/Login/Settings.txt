@@ -1,0 +1,23 @@
+/echo /loadfile M:\Projects\AC\SillAC\SillAC\bin\Profiles\Login\Settings.txt
+/vt nav load NewbSkipProm
+/vt opt set OpenDoors TRUE
+/vt opt set DoorOpenRange .01
+/vt opt set DoorIDRange .011
+/vt opt set Recharge-Helper-HitP 0
+/vt opt set Recharge-Helper-Mana 0
+/vt opt set Recharge-Helper-Stam 0
+/vt opt set Recharge-Norm-HitP 1
+/vt opt set Recharge-Norm-Mana 1
+/vt opt set Recharge-Norm-Stam 1
+/vt opt set Recharge-NoTarg-HitP 0
+/vt opt set Recharge-NoTarg-Mana 0
+/vt opt set Recharge-NoTarg-Stam 0
+/vt opt set EnableBuffing FALSE
+/vt opt set EnableCombat FALSE
+/vt opt set EnableLooting FALSE
+/vt opt set EnableMeta TRUE
+/vt opt set EnableNav TRUE
+/vt opt set FollowAroundCorners TRUE
+/vt set attackbar .5
+/vt start
+/vwt apply Default

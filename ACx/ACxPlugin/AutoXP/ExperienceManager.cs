@@ -14,9 +14,7 @@ namespace ACxPlugin
         private Timer timer;
         private List<KeyValuePair<ExpTarget, int>> flatPlan { get; set; }
         private int planIndex { get; set; } = 0;
-        private ExperiencePolicy policy;
-
-        public ExperienceManager(PluginLogic plugin) : base(plugin) { }
+        //private ExperiencePolicy policy;
 
         /// <summary>
         /// Spends experience on the next target in the plan
@@ -57,10 +55,11 @@ namespace ACxPlugin
         {
             var plan = new Dictionary<ExpTarget, List<int>>();
             var weightedCosts = new Dictionary<ExpTarget, double>();
+            var policy = Plugin.Profile.ExpPolicy;
 
-			//Utils.WriteToChat($"Creating a plan to spend {expToSpend} up to {maxSteps} times on {policy.Weights.Count} targets of exp.");
+			if(Utils.DEBUG) Utils.WriteToChat($"Creating a plan to spend {expToSpend} up to {maxSteps} times on {policy.Weights.Count} targets of exp.");
 
-			//Utils.WriteToChat($"Initial costs/weights/weighted costs:");
+            if (Utils.DEBUG) Utils.WriteToChat($"Initial costs/weights/weighted costs:");
 			//Find what exp targets are candidates to be leveled
 			foreach (var t in policy.Weights)
             {
@@ -70,19 +69,23 @@ namespace ACxPlugin
 
                 try
                 {
-                    var cost = t.Key.CostToLevel() ?? -1;
-
+                    Utils.WriteToChat($"{t.Key}");
+					var cost = t.Key.CostToLevel() ?? -1;
                     //Continue if no known cost to level
-                    if (cost < 0)
+                    if (cost <= 0)
                     {
-                        //Utils.WriteToChat($"  {t.Key}: n/a");
+                        //if (Utils.DEBUG) Utils.WriteToChat($"  {t.Key}: n/a");
                         continue;
                     }
 
                     //Otherwise consider it for spending exp on
+                    if(plan.ContainsKey(t.Key))
+                        Utils.WriteToChat($"Plan has key {t.Key}");
                     plan.Add(t.Key, new List<int>());
 
                     //Figure out initial weighted cost of exp target
+                    if (weightedCosts.ContainsKey(t.Key))
+                        Utils.WriteToChat($"Plan has key {t.Key}");
                     weightedCosts.Add(t.Key, cost / policy.Weights[t.Key]);
 
                     //Utils.WriteToChat($"  {t.Key}: {cost} \t {Weights[t.Key]} \t {cost / Weights[t.Key]}");
@@ -94,7 +97,7 @@ namespace ACxPlugin
             }
 
             //Break if nothing left to level
-            if (flatPlan.Count == 0)
+            if (plan.Count == 0)
                 return plan;
 
 
@@ -214,7 +217,7 @@ namespace ACxPlugin
             //Check for nothing left to level
             if(flatPlan.Count == 0)
 			{
-                Utils.WriteToChat($"Found nothing left to level from {policy.Weights.Count} targets.");
+                Utils.WriteToChat($"nothing left to level from {Plugin.Profile.ExpPolicy.Weights.Count} targets.");
                 return;
 			}
 
@@ -233,25 +236,24 @@ namespace ACxPlugin
         public void PrintPolicy()
         {
             Utils.WriteToChat("Current experience policy weights:");
-            foreach (var kvp in policy.Weights)
+            foreach (var kvp in Plugin.Profile.ExpPolicy.Weights)
                 Utils.WriteToChat(kvp.Key + ": " + kvp.Value);
         }
 
 
-
         //Set instance on startup for lazy access through CommandManager
         public static ExperienceManager Instance { get; set; }
-        public override void Startup()
+        public override void Startup(PluginLogic plugin)
         {
-            Utils.WriteToChat("Setting up experience policy...");
+            base.Startup(plugin);
             Instance = this;
             timer = new Timer() { AutoReset = true, Enabled = false, Interval = Plugin.Config.Interval};
             timer.Elapsed += SpendExperienceTick;
-            policy = Plugin.Profile.ExpPolicy;
+            //policy = Plugin.Profile.ExpPolicy;
         }
         public override void Shutdown()
         {
-            Utils.WriteToChat("Shutting down experience policy...");
+            base.Shutdown();
             Instance = null;
             timer.Enabled = false;
             timer.Elapsed -= SpendExperienceTick;

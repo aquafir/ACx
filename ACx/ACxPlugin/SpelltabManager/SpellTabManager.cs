@@ -21,8 +21,6 @@ namespace ACxPlugin
         private int spellIndex { get; set; } = 0;
         private bool spellBarsEmpty = false;
 
-        public SpellTabManager(PluginLogic plugin) : base(plugin) { }
-
         private void SpendExperienceTick(object sender, ElapsedEventArgs e)
         {
             //Check for cleared spell bars
@@ -185,16 +183,16 @@ namespace ACxPlugin
 
 
         public static SpellTabManager Instance { get; set; }
-        public override void Startup()
+        public override void Startup(PluginLogic plugin)
         {
-            //Utils.WriteToChat("Starting spell manager...");
+            base.Startup(plugin);
             Instance = this;
             timer = new Timer() { AutoReset = true, Enabled = false, Interval = Plugin.Config.Interval };
             timer.Elapsed += SpendExperienceTick;
         }
         public override void Shutdown()
         {
-            //Utils.WriteToChat("Shutting down spell manager...");
+            base.Shutdown();
             Instance = null;
             timer.Enabled = false;
             timer.Elapsed -= SpendExperienceTick;

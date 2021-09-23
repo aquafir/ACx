@@ -9,10 +9,11 @@ using System.Timers;
 
 namespace ACxPlugin
 {
-	public class CharacterProfile
+	public class CharacterProfile : Module
 	{
 		private const int DEFAULT_LOGIN_COMMAND_DELAY = 5000;
 		private Timer loginCommandTimer;
+		private FileSystemWatcher profileWatcher;
 
 		[JsonIgnore]
 		public string Path { get; set; }
@@ -25,12 +26,6 @@ namespace ACxPlugin
 		public string[] LoginCommands { get; set; } = { };
 		[JsonProperty("Policy")]
 		public ExperiencePolicy ExpPolicy { get; set; }
-
-		public CharacterProfile()
-		{
-			loginCommandTimer = new Timer { Interval = DEFAULT_LOGIN_COMMAND_DELAY, AutoReset = false, Enabled = true };
-			loginCommandTimer.Elapsed += DelayedLoginCommands;
-		}
 
 		private void DelayedLoginCommands(object sender, ElapsedEventArgs e)
 		{
@@ -74,6 +69,41 @@ namespace ACxPlugin
 					ExpPolicy = ExperiencePolicy.Default
 				};
 			}
+		}
+
+		public override void Startup(PluginLogic plugin)
+		{
+			base.Startup(plugin);
+
+			//Create a timer to execute login commands after a delay
+			loginCommandTimer = new Timer { Interval = DEFAULT_LOGIN_COMMAND_DELAY, AutoReset = false, Enabled = true };
+			loginCommandTimer.Elapsed += DelayedLoginCommands;
+
+			//Watch Profile and request reload when changed
+			profileWatcher = new FileSystemWatcher()
+			{
+				Path = System.IO.Path.GetDirectoryName(Path),
+				EnableRaisingEvents = true,
+				NotifyFilter = NotifyFilters.LastWrite,
+			};
+			profileWatcher.Changed += Plugin.RequestReload;
+
+
+			if(Utils.DEBUG)
+			{
+				foreach(var e in ExpPolicy.Weights)
+				{
+					Utils.WriteToChat($"{e.Key} - {e.Value}");
+				}
+			}
+		}
+
+		public override void Shutdown()
+		{
+			base.Shutdown();
+			loginCommandTimer.Enabled = false;
+			profileWatcher.Changed -= Plugin.RequestReload;
+			profileWatcher?.Dispose();
 		}
 	}
 }

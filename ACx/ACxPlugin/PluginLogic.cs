@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using VirindiViewService;
 using VirindiViewService.Controls;
 using VirindiViewService.XMLParsers;
+using ACxPlugin.Location;
 
 namespace ACxPlugin
 {
@@ -38,8 +39,7 @@ namespace ACxPlugin
 
 		//Todo: Possibly move reload logic to Config/Profiles and have them request the PluginLogic reloads
 		private Timer reloadTimer;
-		private FileSystemWatcher profileWatcher;
-		private FileSystemWatcher configurationWatcher;
+
 
 		[XmlIgnoreAttribute]
 		private List<Module> modules;
@@ -70,52 +70,24 @@ namespace ACxPlugin
 		{
 			try
 			{
-				//Config/Profiles
-				//Utils.WriteToChat("Loading configuration...");
-				Config = Configuration.LoadOrCreateConfiguration(this);
-				//Utils.WriteToChat("Finding character profile...");
+				//Config/profile
+				Config = Configuration.LoadOrCreateConfiguration();
 				Profile = Config.LoadOrCreateProfile();
 
-				//Utils.WriteToChat($"Watching configuration for changes: {Path.GetDirectoryName(config.Path)}\t{Path.GetFileName(config.Path)})");
-				configurationWatcher = new FileSystemWatcher()
-				{
-					Path = Path.GetDirectoryName(Config.Path),
-					Filter = Path.GetFileName(Config.Path),
-					EnableRaisingEvents = true,
-					NotifyFilter = NotifyFilters.LastWrite,
-					IncludeSubdirectories = true
-				};
-				configurationWatcher.Changed += RequestReload;
-				//Utils.WriteToChat($"Watching profile for changes: {Path.GetDirectoryName(profile.Path)}\t{Path.GetFileName(profile.Path)}");
-				profileWatcher = new FileSystemWatcher()
-				{
-					Path = Path.GetDirectoryName(Profile.Path),
-					Filter = Path.GetFileName(Profile.Path),
-					EnableRaisingEvents = true,
-					NotifyFilter = NotifyFilters.LastWrite,
-					IncludeSubdirectories = true
-				};
-				profileWatcher.Changed += RequestReload;
+				//Set up and start modules
+				modules = new List<Module>();
+				modules.Add(Config);
+				modules.Add(Profile);
+				modules.Add(new CommandManager());
+				modules.Add(new SpellTabManager());
+				modules.Add(new ExperienceManager());
+				modules.Add(new LocationManager());
+				foreach (var m in modules)
+					m.Startup(this);
 
-				//First time only activities
-				//if (IsFirstLogin)
-				//{
-				//	IsFirstLogin = false;
-				//	//Utils.WriteToChat("Running login commands...");
-				//	Profile.ScheduleLoginCommands();
-				//}
-
-				//Tries to load settings if a file watcher indicates they've changed. Stop on success
+				//Try to reload settings if Config/Profile has changed. Stop on success
 				reloadTimer = new Timer() { AutoReset = true, Enabled = false, Interval = TIME_BETWEEN_RELOAD_ATTEMPTS };
 				reloadTimer.Elapsed += TryReload;
-
-				//Modules
-				modules = new List<Module>();
-				modules.Add(new CommandManager(this));
-				modules.Add(new SpellTabManager(this));
-				modules.Add(new ExperienceManager(this));
-				foreach (var m in modules)
-					m.Startup();
 
 				Utils.WriteToChat("Successfully loaded!");
 			}
@@ -142,27 +114,28 @@ namespace ACxPlugin
 			}
 		}
 
-		private void RequestReload(object sender, FileSystemEventArgs e)
+		public void RequestReload(object sender, FileSystemEventArgs e)
 		{
 			//Utils.WriteToChat($"Requesting reload: {e.FullPath} \t {e.ChangeType}");
 			reloadTimer.Enabled = true;
 		}
 
 		#region Startup / Shutdown
-		// Called once when the plugin is loaded.  Loads modules.
+		// Called once when the plugin is loaded.
 		public void Startup(NetServiceHost host, CoreManager core, string pluginAssemblyDirectory, string accountName, string characterName, string serverName)
 		{
-			
 			Utils.AssemblyDirectory = pluginAssemblyDirectory;
 
+			Initialize();
+
+			//Profile selection needs to be done when 
 			//If the player is logged in and the plugin is reloaded reinitialize
 			if (Utils.IsLoggedIn())
 			{
 				var timeLapsedLastLoad = DateTime.Now - lastLoad;
 				if (timeLapsedLastLoad.TotalMilliseconds > TIME_BETWEEN_PLUGIN_RELOAD)
 				{
-
-					//Utils.WriteToChat($"Reloaded after {timeLapsedLastLoad.TotalSeconds} seconds since last load");
+					Utils.WriteToChat($"Reloaded {timeLapsedLastLoad.TotalSeconds} seconds after last load");
 					lastLoad = DateTime.Now;
 
 					Initialize();
@@ -171,16 +144,7 @@ namespace ACxPlugin
 
 			//Otherwise the plugin handles things on login
 			CoreManager.Current.CharacterFilter.LoginComplete += this.CharacterFilter_LoginComplete;
-			CoreManager.Current.CharacterFilter.Logoff += CharacterFilter_Logoff;
-
-			var actions = CoreManager.Current.Actions;
-			CoreManager.Current.CharacterFilter.ChangePortalMode += (send, e) =>
-			{
-				if (e.Type == PortalEventType.ExitPortal)
-				{
-					Utils.WriteToChat($"{actions.Landcell}\t{actions.LocationX},{actions.LocationY},{actions.LocationZ}");
-					}
-			};
+			CoreManager.Current.CharacterFilter.Logoff += CharacterFilter_Logoff;			
 		}
 
 		/// <summary>
@@ -190,32 +154,18 @@ namespace ACxPlugin
 		{
 			try
 			{
+				//Shutdown modules
 				foreach (var m in modules)
 					m.Shutdown();
-
-				//Stop anything currently going on
-				//Utils.WriteToChat("Shutting down command manager...");
+				modules.Clear();
 
 				//Utils.WriteToChat("Removing timers...");
 				if (reloadTimer != null)
 					reloadTimer.Enabled = false;
-				if (configurationWatcher != null)
-					configurationWatcher.Dispose();
-				if (profileWatcher != null)
-					profileWatcher.Dispose();
+				reloadTimer.Elapsed -= TryReload;
 
-				//Remove events
-				//Utils.WriteToChat("Removing config watcher...");
-				if (configurationWatcher != null)
-					configurationWatcher.Changed -= RequestReload;
-				//Utils.WriteToChat("Removing profile watcher...");
-				if (profileWatcher != null)
-					profileWatcher.Changed -= RequestReload;
-				reloadTimer.Elapsed -= TryReload; 
-
-				//Utils.WriteToChat("Removing login event...");
+				//Remove login events
 				CoreManager.Current.CharacterFilter.LoginComplete -= CharacterFilter_LoginComplete;
-				//Utils.WriteToChat("Removing logoff event...");
 				CoreManager.Current.CharacterFilter.Logoff -= CharacterFilter_Logoff;
 			}
 			catch (Exception ex)

@@ -13,8 +13,6 @@ namespace ACxPlugin
         private Regex commandParser;
         private string commandPattern = String.Join("|", Enum.GetNames(typeof(Command)).OrderBy(x=>x).ToArray()).ToLower();
 
-        public CommandManager(PluginLogic plugin) : base(plugin) { }
-
         public void Core_CommandLineText(object sender, ChatParserInterceptEventArgs e)
         {
             try
@@ -171,14 +169,15 @@ namespace ACxPlugin
             CoreManager.Current.CommandLineText += Core_CommandLineText;
         }
 
-		public override void Startup()
+		public override void Startup(PluginLogic plugin)
 		{
-            //Utils.WriteToChat("Setting up command parser...");
+            base.Startup(plugin);
+
             SetupCommandParser();
-		}
+        }
         public override void Shutdown()
         {
-            //Utils.WriteToChat("Shutting down command manager...");
+            base.Shutdown();
             CoreManager.Current.CommandLineText -= Core_CommandLineText;
         }
     }
