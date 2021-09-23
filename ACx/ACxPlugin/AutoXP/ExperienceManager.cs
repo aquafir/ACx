@@ -243,7 +243,7 @@ namespace ACxPlugin
         public static ExperienceManager Instance { get; set; }
         public override void Startup()
         {
-            Utils.WriteToChat("Setting up experience policy...");
+            base.Startup();
             Instance = this;
             timer = new Timer() { AutoReset = true, Enabled = false, Interval = Plugin.Config.Interval};
             timer.Elapsed += SpendExperienceTick;
@@ -251,7 +251,7 @@ namespace ACxPlugin
         }
         public override void Shutdown()
         {
-            Utils.WriteToChat("Shutting down experience policy...");
+            base.Shutdown();
             Instance = null;
             timer.Enabled = false;
             timer.Elapsed -= SpendExperienceTick;

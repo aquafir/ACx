@@ -187,14 +187,14 @@ namespace ACxPlugin
         public static SpellTabManager Instance { get; set; }
         public override void Startup()
         {
-            //Utils.WriteToChat("Starting spell manager...");
+            base.Startup();
             Instance = this;
             timer = new Timer() { AutoReset = true, Enabled = false, Interval = Plugin.Config.Interval };
             timer.Elapsed += SpendExperienceTick;
         }
         public override void Shutdown()
         {
-            //Utils.WriteToChat("Shutting down spell manager...");
+            base.Shutdown();
             Instance = null;
             timer.Enabled = false;
             timer.Elapsed -= SpendExperienceTick;

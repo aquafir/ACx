@@ -106,7 +106,11 @@ Commands will be ran after a short delay after logging in.
 
 ### AutoXP
 
-Spend available experience based on a ratio you define in a [Profile](#Profile).  The higher the number the more experience you'd spend on the skill (e.g., War - 10, Endurance - 1 would level War if it cost less than 10x Endurance).
+Spend available experience based on a ratio you define in a [Profile](#Profile).  
+
+The higher the number the more experience you'd spend on the skill (e.g., War - 10, Endurance - 1 would level War if it cost less than 10x Endurance).
+
+You can delete or comment out unused targets.
 
 
 

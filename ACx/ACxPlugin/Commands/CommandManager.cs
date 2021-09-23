@@ -173,12 +173,11 @@ namespace ACxPlugin
 
 		public override void Startup()
 		{
-            //Utils.WriteToChat("Setting up command parser...");
-            SetupCommandParser();
-		}
+            base.Startup();
+        }
         public override void Shutdown()
         {
-            //Utils.WriteToChat("Shutting down command manager...");
+            base.Shutdown();
             CoreManager.Current.CommandLineText -= Core_CommandLineText;
         }
     }

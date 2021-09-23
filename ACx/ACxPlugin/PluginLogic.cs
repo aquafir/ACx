@@ -14,6 +14,7 @@ using System.Xml.Serialization;
 using VirindiViewService;
 using VirindiViewService.Controls;
 using VirindiViewService.XMLParsers;
+using ACxPlugin.Location;
 
 namespace ACxPlugin
 {
@@ -114,6 +115,7 @@ namespace ACxPlugin
 				modules.Add(new CommandManager(this));
 				modules.Add(new SpellTabManager(this));
 				modules.Add(new ExperienceManager(this));
+				modules.Add(new LocationManager(this));
 				foreach (var m in modules)
 					m.Startup();
 
@@ -193,8 +195,6 @@ namespace ACxPlugin
 				foreach (var m in modules)
 					m.Shutdown();
 
-				//Stop anything currently going on
-				//Utils.WriteToChat("Shutting down command manager...");
 
 				//Utils.WriteToChat("Removing timers...");
 				if (reloadTimer != null)

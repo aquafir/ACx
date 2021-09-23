@@ -18,11 +18,17 @@ namespace ACxPlugin
 		/// <summary>
 		/// Called once when the main plugin is loaded
 		/// </summary>
-		public virtual void Startup() { }
+		public virtual void Startup() {
+			if (Utils.DEBUG)
+				Utils.WriteToChat($"Starting up {this.GetType().Name}...");
+		}
 
 		/// <summary>
 		/// Called when the main plugin is shutting down.  Unregister from any events here and do any cleanup.
 		/// </summary>
-		public virtual void Shutdown() { }
+		public virtual void Shutdown() {
+			if (Utils.DEBUG)
+				Utils.WriteToChat($"Shutting down {this.GetType().Name}...");
+		}
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ACxPlugin
+namespace ACxPlugin.Location
 {
 	/// <summary>
 	/// When exiting portal, upon request, and possibly periodically check for location-base commands.  
