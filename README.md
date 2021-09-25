@@ -98,9 +98,11 @@ In a [Profile](#Profile) you can add an array of files that are loaded using AC'
 "Login Commands": ["/x ln 1", "/x level"],
 ```
 
-
-
 Commands will be ran after a short delay (2s) after logging in.  
+
+
+
+https://user-images.githubusercontent.com/83029060/134779778-5ab99f4f-00be-4930-b31b-6a9ba79f0a8d.mp4
 
 
 
@@ -129,6 +131,9 @@ View loaded policy in game:
 `/x policy`
 
 
+https://user-images.githubusercontent.com/83029060/134779589-2d254104-dbbe-4ba6-a889-93b31ee605ad.mp4
+
+
 
 *You can delete or comment out unused targets if you like.*
 
@@ -154,6 +159,10 @@ Load spells (takes time to add to bar, default path `Spells.json`):
 
 
 
+https://user-images.githubusercontent.com/83029060/134779689-16b89caf-b7bd-4822-a7f2-1fccfa3895eb.mp4
+
+
+
 *This only works up to the 7th spell bar as far as I know.*
 
 
@@ -169,6 +178,12 @@ This looks for the first `.nav` and `.txt` file in the VTank folder that contain
 
 
 Disable in the [Profile](#Profile) with `"Load Locations": false,`
+
+
+
+
+https://user-images.githubusercontent.com/83029060/134779994-91d9859a-632b-42cc-8e53-3ea8607928cd.mp4
+
 
 
 
@@ -201,6 +216,12 @@ Some examples:
 `/x loginnext 5` would log in 5 spots after the current one, but it would halt and clear the login queue if out of bounds
 
 `/x PrintLogins` will display sorted characters and their ID
+
+
+
+https://user-images.githubusercontent.com/83029060/134779881-34930129-f8e1-4fcd-a832-03079363bb83.mp4
+
+
 
 
 
