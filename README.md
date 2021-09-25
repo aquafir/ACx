@@ -1,8 +1,6 @@
 # ACx
 
-Previously posted under [SillAC](https://github.com/sillAC/SillAC-Tools) before I misplaced those credentials and took a long break.
-
-The plugin has since been reworked using [trevis' hot-reload template](https://gitlab.com/trevis/HotDecalPluginTemplate), with a few improvements and a few things added.
+Previously posted under [SillAC](https://github.com/sillAC/SillAC-Tools) before taking a long break.  The plugin has since been reworked using [trevis' hot-reload template](https://gitlab.com/trevis/HotDecalPluginTemplate), with a few improvements and a few things added.
 
 To use, add `ACx.dll` to Decal.  It will show up under `Network Filters`
 
@@ -12,7 +10,7 @@ To use, add `ACx.dll` to Decal.  It will show up under `Network Filters`
 
 Configuration is done through `Config.json` and can be opened while in-game using `/x ec` or `/x editconfig`.
 
-Within it you can change the trigger from `/x` to something else, or adjust the speed messages are sent to the server (which may be needed if you're having issues with the AutoXP or Spellbar Manager).
+Within it you can change the trigger from `/x` to something else, or adjust the speed messages are sent to the server.
 
 
 
@@ -52,7 +50,7 @@ The above example  has three rules that match characters to profiles:
 
 Both configuration and profiles:
 
-* Reload effected plugins upon change
+* Reload upon changes
 * Are attempted to be created if missing
 
 
@@ -61,24 +59,9 @@ Both configuration and profiles:
 
 ### Profile
 
-Profiles have a `Policy` used to choose how to allocate experience with [AutoXP](#AutoXp).  You can delete skills not used.
+Profiles contain group-specific settings that are documented under the relevant section (e.g., the `Policy` of [AutoXP](#AutoXP)).
 
 
-
-
-
-#### Login Commands
-
-You can add an array of both files that are loaded using AC's `/loadfile [batch file]` and commands:
-
-```
-"Login Load Commands": ["Login/Start.txt"],
-"Login Commands": ["/x ln 1", "/x level"],
-```
-
-
-
-Commands will be ran after a short delay (2s) after logging in.  
 
 
 
@@ -104,13 +87,26 @@ Commands will be ran after a short delay (2s) after logging in.
 
 
 
+### Login Commands
+
+In a [Profile](#Profile) you can add an array of files that are loaded using AC's `/loadfile [batch file]` and chat commands:
+
+```
+"Login Load Commands": ["Login/Start.txt"],
+"Login Commands": ["/x ln 1", "/x level"],
+```
+
+
+
+Commands will be ran after a short delay (2s) after logging in.  
+
+
+
 ### AutoXP
 
-Spend available experience based on a ratio you define in a [Profile](#Profile).  
+Spend available experience based on a ratio you define in the `Policy` of a [Profile](#Profile).  
 
 The higher the number the more experience you'd spend on the skill (e.g., War - 10, Endurance - 1 would level War if it cost less than 10x Endurance).
-
-You can delete or comment out unused targets.
 
 
 
@@ -131,6 +127,8 @@ View loaded policy in game:
 `/x policy`
 
 
+
+*You can delete or comment out unused targets if you like.*
 
 *Not able to account for xp already spent on a skill. Doesn't try to get the last level for that reason (and to save server operators some grief)*
 
