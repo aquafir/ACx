@@ -15,8 +15,6 @@ To use, add `ACx.dll` to Decal.  It will show up under `Network Filters`
 	- [[#Login Helper (requires [Mag-Filter](https://github.com/Mag-nus/Mag-Plugins/wiki/Mag%E2%80%90Filter))|Login Helper (requires Mag-Filter)]]
 	- [[#Party Helper (use with [IBControlUnlimited](http://immortalbob.com/phpBB3/viewtopic.php?f=6&t=656))|Party Helper (IBControlUnlimited)]]
 
-
-
 ## Configuration
 
 Configuration is done through `Config.json` and can be opened while in-game using `/x ec` or `/x editconfig`.
