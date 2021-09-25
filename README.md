@@ -5,15 +5,8 @@ Previously posted under [SillAC](https://github.com/sillAC/SillAC-Tools) before 
 To use, add `ACx.dll` to Decal.  It will show up under `Network Filters`
 
 
-- [[#Configuration|Configuration]]
-	- [[#Profile|Profile]]
-- [[#Commands|Commands]]
-	- [[#Login Commands|Login Commands]]
-	- [[#AutoXP|AutoXP]]
-	- [[#Spellbar Manager|Spellbar Manager]]
-	- [[#Location Manager|Location Manager]]
-	- [[#Login Helper (requires [Mag-Filter](https://github.com/Mag-nus/Mag-Plugins/wiki/Mag%E2%80%90Filter))|Login Helper (requires Mag-Filter)]]
-	- [[#Party Helper (use with [IBControlUnlimited](http://immortalbob.com/phpBB3/viewtopic.php?f=6&t=656))|Party Helper (IBControlUnlimited)]]
+
+
 
 ## Configuration
 
