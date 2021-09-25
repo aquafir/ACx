@@ -11,68 +11,81 @@ namespace ACxPlugin.Location
 	public class LocationManager : Module
 	{
 		private const string VTANK_DIR = @"C:\Games\VirindiPlugins\VirindiTank";
-		
+
 		private void CharacterFilter_ChangePortalMode(object sender, Decal.Adapter.Wrappers.ChangePortalModeEventArgs e)
 		{
-			//var actions = CoreManager.Current.Actions;
 			if (e.Type == PortalEventType.ExitPortal)
 			{
-				if (TryFindLocationNav(out string nav))
-					Utils.Command($"/vt nav load {nav}");
-
-				//If you wanted to do this with metas...
-				//if(TryFindLocationMeta(out string meta))
-				//	Utils.Command($"/vt meta load {meta}");
+				LoadLocation();
 			}
-
 		}
 
-		public static bool TryFindLocationNav(out string fileName)
+		public static void LoadLocation(bool createMissingNav = false, bool createMissingTxt = false)
 		{
-			fileName = null;
-			var lbHex = $"{CoreManager.Current.Actions.Landcell:X}";
-			var locMatches = Directory.GetFiles(VTANK_DIR, $"*{lbHex}*.nav");
-
-			if(locMatches.Length > 0)
+			if (TryFindByLocation(out string nav, "nav"))
+				Utils.Command($"/vt nav load {nav}");
+			else if (createMissingNav)
 			{
-				fileName = Path.GetFileNameWithoutExtension(locMatches[0]);
-				return true;
+				nav = $"0x{CoreManager.Current.Actions.Landcell:X}";
+				Utils.Command($"/vt nav load {nav}");
 			}
 
-			return false;
+			if (TryFindByLocation(out string load, "txt"))
+				Utils.Command($"/loadfile {VTANK_DIR}\\{load}.txt");
+			else if (createMissingTxt)
+			{
+				try
+				{
+					load = $"{VTANK_DIR}\\0x{CoreManager.Current.Actions.Landcell:X}.txt";
+					File.Create(load);
+				}
+				catch (Exception ex)
+				{
+					Utils.LogError(ex);
+				}
+			}
 		}
 
-		public static bool TryFindLocationMeta(out string fileName)
+		public static bool TryFindByLocation(out string fileName, string extension)
 		{
 			fileName = null;
-			var lbHex = $"{CoreManager.Current.Actions.Landcell:X}";
-			var locMatches = Directory.GetFiles(VTANK_DIR, $"*{lbHex}*.met");
+
+			//Require VTank
+			if (!Directory.Exists(VTANK_DIR))
+				return false;
+
+			//Use first 4 hex of the landblock for compatibility with acpedia
+			var lbHex = $"{CoreManager.Current.Actions.Landcell:X}".Substring(0, 4);
+			var locMatches = Directory.GetFiles(VTANK_DIR, $"*{lbHex}*.{extension}");
 
 			if (locMatches.Length > 0)
 			{
 				fileName = Path.GetFileNameWithoutExtension(locMatches[0]);
+				Utils.WriteToChat($"Loading {extension} {fileName} from {locMatches.Length} matches of {lbHex}");
+
 				return true;
 			}
 
 			return false;
 		}
 
-		public static void CreateOrLoadNav()
+		private void CharacterFilter_LoginComplete(object sender, EventArgs e)
 		{
-			//Use nav file if it can be found, otherwise load the hex of the landblock
-			if (!TryFindLocationNav(out string nav))
-				nav = $"0x{CoreManager.Current.Actions.Landcell:X}";
-
-				Utils.Command($"/vt nav load {nav}");
+			LoadLocation();
 		}
 
 		public override void Startup(PluginLogic plugin)
 		{
 			base.Startup(plugin);
 
-			//Add landblock detection?
-			if(Plugin.Profile.LoadLocations)
+			// landblock detection?
+			if (Plugin.Profile.LoadLocations)
+			{
 				CoreManager.Current.CharacterFilter.ChangePortalMode += CharacterFilter_ChangePortalMode;
+
+				//Load on login
+				CoreManager.Current.CharacterFilter.LoginComplete += CharacterFilter_LoginComplete;
+			}
 		}
 
 		public override void Shutdown()
@@ -81,7 +94,10 @@ namespace ACxPlugin.Location
 
 			//Todo: decide if this should be moved to the event / handled with some internal record 
 			if (Plugin.Profile.LoadLocations)
+			{
 				CoreManager.Current.CharacterFilter.ChangePortalMode -= CharacterFilter_ChangePortalMode;
+				CoreManager.Current.CharacterFilter.LoginComplete -= CharacterFilter_LoginComplete;
+			}
 		}
 	}
 }

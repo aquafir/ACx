@@ -66,6 +66,7 @@ namespace ACxPlugin
         public void SaveAllSpells(string path)
         {
             path = Path.Combine(Utils.AssemblyDirectory, path);
+            Directory.CreateDirectory(path);
             //path = Path.GetFullPath(path);
             SpellTab[] tabs = new SpellTab[MAX_SPELL_TAB];
             for (var i = 0; i < tabs.Length; i++)
@@ -139,11 +140,16 @@ namespace ACxPlugin
         }
         public void LoadSpells(string path)
         {
+            path = Path.Combine(Utils.AssemblyDirectory, path);
+            if (!File.Exists(path))
+            {
+                Utils.WriteToChat($"No file found at {path}");
+                return;
+            }
+
             //TODO: Wait until spells are all gone / implement something that only deletes/inserts what you need to
             ClearAllSpells();
 
-            path = Path.Combine(Utils.AssemblyDirectory, path);
-            //var path = Path.GetFullPath(parameters);
             try
             {
                 var json = File.ReadAllText(path);

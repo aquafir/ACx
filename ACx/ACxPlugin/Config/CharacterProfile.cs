@@ -27,7 +27,7 @@ namespace ACxPlugin
 		[JsonProperty("Login Commands")]
 		public string[] LoginCommands { get; set; } = { };
 		[JsonProperty("Policy")]
-		public ExperiencePolicy ExpPolicy { get; set; }
+		public ExperiencePolicy ExpPolicy { get; set; } = ExperiencePolicy.Default;
 
 		private void DelayedLoginCommands(object sender, ElapsedEventArgs e)
 		{

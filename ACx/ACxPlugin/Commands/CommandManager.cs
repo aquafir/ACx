@@ -117,7 +117,7 @@ namespace ACxPlugin
                     SpellTabManager.Instance?.LoadSpells();
                     break;
                 case Command.LoadLocation:
-                    LocationManager.CreateOrLoadNav();
+                    LocationManager.LoadLocation(true);
                     break;
                 //case Command.Pickup:
                 //    //var core = CoreManager.Current.Actions;

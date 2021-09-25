@@ -156,23 +156,29 @@ Load spells (takes time to add to bar, default path `Spells.json`):
 
 
 
-### Party Helper (use with [IBControlUnlimited](http://immortalbob.com/phpBB3/viewtopic.php?f=6&t=656))
+### Location Manager
 
-This is a pretty basic helper for [Unlimited_IBControl](http://immortalbob.com/phpBB3/viewtopic.php?f=6&t=656) that lets you avoid messing with the meta.
+This looks for the first `.nav` and `.txt` file in the VTank folder that contains the first 4 hex digits of the landblock and loads it:
+
+`/x [loadlocation|ll]` would either the first matching location or create a nav called `0x########` based on location.
+
+`Starter - 8C04.txt` would be loaded automatically via `/loadfile` when you entered the Yaraq Training Academy.
 
 
 
-Add all nearby characters to the list of possible controllers (might be used if you trust others and want to briefly let them control your account):
+Disable in the [Profile](#Profile) with `"Load Locations": false,`
 
-`/x [pn|partynearby]`
 
-Load all characters from `Party.txt` and add them as possible controllers:
 
-`/x [lp|loadparty]`
+*Assumes you use the default VTank directory*
 
-Save all characters on your account to `Party.txt`:
+*If there's interest this may be expanded to include:*
 
-`/x [ap|addparty]`
+* *Metas or command triggers (no effort for this)*  
+* *Coord support instead of just landblock*
+  * *Proximity checks (e.g., periodic checks that trigger when 50 units away from a location)* 
+* *Customizing based on profile* 
+* *Scanning navs to find the one with the closest* 
 
 
 
@@ -199,3 +205,29 @@ Some examples:
 *This is unable to be used the first time a character is created, but the plugin informs you if that is the case.*
 
 *Todo:  maybe add Mag-Filter defaults, or integrate this with that/vice-versa*
+
+
+
+
+
+### Party Helper (use with [IBControlUnlimited](http://immortalbob.com/phpBB3/viewtopic.php?f=6&t=656))
+
+This is a pretty basic helper for [Unlimited_IBControl](http://immortalbob.com/phpBB3/viewtopic.php?f=6&t=656) that lets you avoid messing with the meta.
+
+
+
+Add all nearby characters to the list of possible controllers (might be used if you trust others and want to briefly let them control your account):
+
+`/x [pn|partynearby]`
+
+Load all characters from `Party.txt` and add them as possible controllers:
+
+`/x [lp|loadparty]`
+
+Save all characters on your account to `Party.txt`:
+
+`/x [ap|addparty]`
+
+
+
+

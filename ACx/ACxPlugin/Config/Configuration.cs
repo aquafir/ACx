@@ -128,6 +128,10 @@ namespace ACxPlugin
 
 				//If the path is rooted use it, otherwise a path relative to the plugin directory
 				var fullPath = System.IO.Path.IsPathRooted(p.Path) ? System.IO.Path.GetFullPath(p.Path) : System.IO.Path.Combine(Utils.AssemblyDirectory, p.Path);
+
+				//Create dir if needed
+				Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fullPath));
+
 				//if (Utils.DEBUG) Utils.WriteToChat("Profile path: " + fullPath);
 				if (File.Exists(fullPath))
 				{

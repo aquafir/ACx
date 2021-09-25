@@ -137,8 +137,6 @@ namespace ACxPlugin
 		{
 			Utils.AssemblyDirectory = pluginAssemblyDirectory;
 
-			//Initialize();
-
 			//Gate the multiple reloads the hot-reload feature was doing..?
 			var timeLapsedLastLoad = DateTime.Now - lastLoad;
 			if (timeLapsedLastLoad.TotalMilliseconds > TIME_BETWEEN_PLUGIN_RELOAD)
@@ -152,14 +150,7 @@ namespace ACxPlugin
 				//Otherwise initialize when logged in
 				else
 					CoreManager.Current.CharacterFilter.LoginComplete += this.CharacterFilter_LoginComplete;
-			}
-
-
-			//}
-
-			//Otherwise the plugin handles things on login
-			//CoreManager.Current.CharacterFilter.LoginComplete += this.CharacterFilter_LoginComplete;
-			//CoreManager.Current.CharacterFilter.Logoff += CharacterFilter_Logoff;			
+			}	
 		}
 
 		/// <summary>
@@ -169,6 +160,10 @@ namespace ACxPlugin
 		{
 			try
 			{
+				//Sanity check that there was something Started to Shutdown
+				if (modules is null)
+					return;
+
 				//Shutdown modules in reverse order?
 				for (var i = modules.Count - 1; i >= 0; i--)
 					modules[i].Shutdown();
@@ -178,10 +173,6 @@ namespace ACxPlugin
 				if (reloadTimer != null)
 					reloadTimer.Enabled = false;
 				reloadTimer.Elapsed -= TryReload;
-
-				//Remove login events
-				//CoreManager.Current.CharacterFilter.LoginComplete -= CharacterFilter_LoginComplete;
-				//CoreManager.Current.CharacterFilter.Logoff -= CharacterFilter_Logoff;
 			}
 			catch (Exception ex)
 			{

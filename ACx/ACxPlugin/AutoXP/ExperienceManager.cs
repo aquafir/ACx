@@ -69,7 +69,7 @@ namespace ACxPlugin
 
                 try
                 {
-                    Utils.WriteToChat($"{t.Key}");
+                    //Utils.WriteToChat($"{t.Key}");
 					var cost = t.Key.CostToLevel() ?? -1;
                     //Continue if no known cost to level
                     if (cost <= 0)
@@ -79,13 +79,13 @@ namespace ACxPlugin
                     }
 
                     //Otherwise consider it for spending exp on
-                    if(plan.ContainsKey(t.Key))
-                        Utils.WriteToChat($"Plan has key {t.Key}");
+                    //if(plan.ContainsKey(t.Key))
+                    //    Utils.WriteToChat($"Plan has key {t.Key}");
                     plan.Add(t.Key, new List<int>());
 
                     //Figure out initial weighted cost of exp target
-                    if (weightedCosts.ContainsKey(t.Key))
-                        Utils.WriteToChat($"Plan has key {t.Key}");
+                    //if (weightedCosts.ContainsKey(t.Key))
+                    //    Utils.WriteToChat($"Plan has key {t.Key}");
                     weightedCosts.Add(t.Key, cost / policy.Weights[t.Key]);
 
                     //Utils.WriteToChat($"  {t.Key}: {cost} \t {Weights[t.Key]} \t {cost / Weights[t.Key]}");
