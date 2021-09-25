@@ -86,6 +86,7 @@ namespace ACxPlugin
 			profileWatcher = new FileSystemWatcher()
 			{
 				Path = System.IO.Path.GetDirectoryName(Path),
+				Filter = System.IO.Path.GetFileName(Path),
 				EnableRaisingEvents = true,
 				NotifyFilter = NotifyFilters.LastWrite,
 			};

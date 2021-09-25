@@ -134,6 +134,8 @@ View loaded policy in game:
 
 *Not able to account for xp already spent on a skill. Doesn't try to get the last level for that reason (and to save server operators some grief)*
 
+*In testing there are some server error messages (e.g., player tried to raise skill beyond 350046134 experience) at the end of levels.  Doesn't cause any harm besides the redtext and stops after.  Haven't figured out why it's happening, based on the approach I used.*
+
 
 
 ### Spellbar Manager
