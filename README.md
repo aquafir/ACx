@@ -78,7 +78,7 @@ You can add an array of both files that are loaded using AC's `/loadfile [batch 
 
 
 
-Commands will be ran after a short delay after logging in.  
+Commands will be ran after a short delay (2s) after logging in.  
 
 
 
@@ -179,7 +179,7 @@ Disable in the [Profile](#Profile) with `"Load Locations": false,`
 * *Metas or command triggers (no effort for this)*  
 * *Coord support instead of just landblock*
   * *Proximity checks (e.g., periodic checks that trigger when 50 units away from a location)* 
-* *Customizing based on profile* 
+* *Customizing more based on profile* 
 * *Scanning navs to find the one with the closest* 
 
 

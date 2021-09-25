@@ -66,8 +66,8 @@ namespace ACxPlugin
         public void SaveAllSpells(string path)
         {
             path = Path.Combine(Utils.AssemblyDirectory, path);
-            Directory.CreateDirectory(path);
-            //path = Path.GetFullPath(path);
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+
             SpellTab[] tabs = new SpellTab[MAX_SPELL_TAB];
             for (var i = 0; i < tabs.Length; i++)
                 tabs[i] = GetSpellTab(i);
@@ -81,7 +81,7 @@ namespace ACxPlugin
             }
             catch (Exception e)
             {
-                Utils.WriteToChat($"Unable to save spells to: {System.IO.Path.GetFullPath(path)}");
+                Utils.WriteToChat($"Unable to save spells to: {Path.GetFullPath(path)}");
                 Utils.LogError(e);
             }
         }

@@ -11,7 +11,7 @@ namespace ACxPlugin
 {
 	public class CharacterProfile : Module
 	{
-		private const int DEFAULT_LOGIN_COMMAND_DELAY = 5000;
+		private const int DEFAULT_LOGIN_COMMAND_DELAY = 2000;
 		private Timer loginCommandTimer;
 		private FileSystemWatcher profileWatcher;
 
