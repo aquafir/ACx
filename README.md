@@ -6,7 +6,13 @@ To use, add `ACx.dll` to Decal.  It will show up under `Network Filters`
 
 
 
-## Configuration
+## Contents
+
+[TOC]
+
+
+
+## [Configuration](#Contents)
 
 Configuration is done through `Config.json` and can be opened while in-game using `/x ec` or `/x editconfig`.
 
@@ -57,7 +63,7 @@ Both configuration and profiles:
 
 
 
-### Profile
+### [Profile](#Contents)
 
 Profiles contain group-specific settings that are documented under the relevant section (e.g., the `Policy` of [AutoXP](#AutoXP)).
 
@@ -67,7 +73,7 @@ Profiles contain group-specific settings that are documented under the relevant 
 
 
 
-## Commands
+## [Commands](#Contents)
 
 * Some commands may be hidden because they're less relevant to players.
 * Commands aren't case-sensitive
@@ -87,7 +93,7 @@ Profiles contain group-specific settings that are documented under the relevant 
 
 
 
-### Login Commands
+### [Login Commands](#Contents)
 
 In a [Profile](#Profile) you can add an array of files that are loaded using AC's `/loadfile [batch file]` and chat commands:
 
@@ -102,7 +108,7 @@ Commands will be ran after a short delay (2s) after logging in.
 
 
 
-### AutoXP
+### [AutoXP](#Contents)
 
 Spend available experience based on a ratio you define in the `Policy` of a [Profile](#Profile).  
 
@@ -136,7 +142,7 @@ View loaded policy in game:
 
 
 
-### Spellbar Manager
+### [Spellbar Manager](#Contents)
 
 Save all spells (default path `Spells.json`):
 
@@ -156,7 +162,7 @@ Load spells (takes time to add to bar, default path `Spells.json`):
 
 
 
-### Location Manager
+### [Location Manager](#Contents)
 
 This looks for the first `.nav` and `.txt` file in the VTank folder that contains the first 4 hex digits of the landblock and loads it:
 
@@ -184,7 +190,7 @@ Disable in the [Profile](#Profile) with `"Load Locations": false,`
 
 
 
-### Login Helper (requires [Mag-Filter](https://github.com/Mag-nus/Mag-Plugins/wiki/Mag%E2%80%90Filter))
+### [Login Helper](#Contents) (requires [Mag-Filter](https://github.com/Mag-nus/Mag-Plugins/wiki/Mag%E2%80%90Filter))
 
 This lets you set the next character to log in with via Mag-Filter using either a part of the name or a relative change from the current one, alphabetically.
 
@@ -210,7 +216,7 @@ Some examples:
 
 
 
-### Party Helper (use with [IBControlUnlimited](http://immortalbob.com/phpBB3/viewtopic.php?f=6&t=656))
+### [Party Helper](#Contents) (use with [IBControlUnlimited](http://immortalbob.com/phpBB3/viewtopic.php?f=6&t=656))
 
 This is a pretty basic helper for [Unlimited_IBControl](http://immortalbob.com/phpBB3/viewtopic.php?f=6&t=656) that lets you avoid messing with the meta.
 
