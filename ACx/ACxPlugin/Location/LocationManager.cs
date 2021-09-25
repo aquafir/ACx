@@ -78,7 +78,14 @@ namespace ACxPlugin.Location
 		{
 			base.Startup(plugin);
 
-		{
+			// landblock detection?
+			if (Plugin.Profile.LoadLocations)
+			{
+				CoreManager.Current.CharacterFilter.ChangePortalMode += CharacterFilter_ChangePortalMode;
+
+				//Load on login
+				CoreManager.Current.CharacterFilter.LoginComplete += CharacterFilter_LoginComplete;
+			}
 		}
 
 		public override void Shutdown()

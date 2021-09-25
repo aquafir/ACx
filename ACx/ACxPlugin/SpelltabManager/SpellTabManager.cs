@@ -183,7 +183,6 @@ namespace ACxPlugin
             {
                 Utils.WriteToChat($"Failed to load spells from: {path}");
                 Utils.LogError(ex);
-
             }
         }
 
