@@ -18,6 +18,10 @@ namespace ACxPlugin
 	{
 		public static string DefaultConfigurationPath = @"Config.json";
 		public static string DefaultProfileFolder = @"Profiles";
+
+		[JsonIgnore]
+		public string SelectedProfile { get; set; }
+		[JsonIgnore]
 		private FileSystemWatcher configurationWatcher;
 
 		//[JsonIgnore]
@@ -65,7 +69,7 @@ namespace ACxPlugin
 				}
 				else
 				{
-					if (Utils.DEBUG) Utils.WriteToChat($"Loading config from: {config.Path}");
+					//if (Utils.DEBUG) Utils.WriteToChat($"Loading config from: {config.Path}");
 					try
 					{
 						config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(configPath));
@@ -91,16 +95,12 @@ namespace ACxPlugin
 			//var characterProfile = CharacterProfile.Default;
 			var characterProfile = new CharacterProfile();
 
-			if (Utils.DEBUG)
-			{
-				Utils.WriteToChat($"{CoreManager.Current.CharacterFilter.Name}\t{CoreManager.Current.CharacterFilter.AccountName}\t{CoreManager.Current.CharacterFilter.Server}");
-				Utils.WriteToChat("Policies: Profile,Char,Account,Server,Priority");
-				foreach (var p in Profiles.OrderByDescending(t => t.Priority))
-				{
-					Utils.WriteToChat($"{p.FriendlyName,-20}{p.CharName,-20}");
-					Utils.WriteToChat($"{p.Account,-15}{p.Server,-15}{p.Priority,-8}");
-				}
-			}
+			//if (Utils.DEBUG)
+			//	foreach (var p in Profiles.OrderByDescending(t => t.Priority))
+			//	{
+			//		Utils.WriteToChat($"{p.FriendlyName,-20}{p.CharName,-20}");
+			//		Utils.WriteToChat($"{p.Account,-15}{p.Server,-15}{p.Priority,-8}");
+			//	}
 
 			foreach (var p in Profiles.OrderByDescending(t => t.Priority))
 			{
@@ -115,7 +115,7 @@ namespace ACxPlugin
 				var account = CoreManager.Current.CharacterFilter.AccountName;
 				var server = CoreManager.Current.CharacterFilter.Server;
 
-				if(Utils.DEBUG) Utils.WriteToChat($"Looking at policy: {p.FriendlyName}:{name}\t{namePattern}\t\t{account}\t{accountPattern}\t\t{server}\t{serverPattern}");
+				//if(Utils.DEBUG) Utils.WriteToChat($"Looking at policy: {p.FriendlyName}:{name}\t{namePattern}\t\t{account}\t{accountPattern}\t\t{server}\t{serverPattern}");
 				//Check for match.  Missing/null interpreted as match
 				if (!Regex.IsMatch(name, namePattern, RegexOptions.IgnoreCase))
 					continue;
@@ -124,12 +124,14 @@ namespace ACxPlugin
 				if (!Regex.IsMatch(server, serverPattern, RegexOptions.IgnoreCase))
 					continue;
 
+				SelectedProfile = p.FriendlyName;
+
 				//If the path is rooted use it, otherwise a path relative to the plugin directory
 				var fullPath = System.IO.Path.IsPathRooted(p.Path) ? System.IO.Path.GetFullPath(p.Path) : System.IO.Path.Combine(Utils.AssemblyDirectory, p.Path);
-				if (Utils.DEBUG) Utils.WriteToChat("Profile path: " + fullPath);
+				//if (Utils.DEBUG) Utils.WriteToChat("Profile path: " + fullPath);
 				if (File.Exists(fullPath))
 				{
-					if (Utils.DEBUG) Utils.WriteToChat($"Matched profile {p.FriendlyName} at: {fullPath}");
+					//if (Utils.DEBUG) Utils.WriteToChat($"Loaded profile {p.FriendlyName} at: {fullPath}");
 					try
 					{
 						characterProfile = JsonConvert.DeserializeObject<CharacterProfile>(File.ReadAllText(fullPath));

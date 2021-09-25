@@ -20,6 +20,8 @@ namespace ACxPlugin
 		[JsonIgnore]
 		public string Directory { get { return System.IO.Path.GetDirectoryName(Path); } }
 
+		[JsonProperty("Load Locations")]
+		public bool LoadLocations { get; set; } = true;
 		[JsonProperty("Login Load Commands")]
 		public string[] LoginLoad { get; set; } = { };
 		[JsonProperty("Login Commands")]
@@ -66,6 +68,7 @@ namespace ACxPlugin
 			{
 				return new CharacterProfile()
 				{
+					LoadLocations = true,
 					ExpPolicy = ExperiencePolicy.Default
 				};
 			}
@@ -88,14 +91,7 @@ namespace ACxPlugin
 			};
 			profileWatcher.Changed += Plugin.RequestReload;
 
-
-			if(Utils.DEBUG)
-			{
-				foreach(var e in ExpPolicy.Weights)
-				{
-					Utils.WriteToChat($"{e.Key} - {e.Value}");
-				}
-			}
+			Utils.WriteToChat($"Selected Profile: {plugin.Config.SelectedProfile}");
 		}
 
 		public override void Shutdown()

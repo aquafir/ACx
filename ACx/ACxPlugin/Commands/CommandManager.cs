@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using Decal.Adapter.Wrappers;
 using System.IO;
+using ACxPlugin.Location;
 
 namespace ACxPlugin
 {
@@ -114,6 +115,9 @@ namespace ACxPlugin
                     break;
                 case Command.LoadSpells:
                     SpellTabManager.Instance?.LoadSpells();
+                    break;
+                case Command.LoadLocation:
+                    LocationManager.CreateOrLoadNav();
                     break;
                 //case Command.Pickup:
                 //    //var core = CoreManager.Current.Actions;

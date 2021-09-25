@@ -49,18 +49,19 @@ namespace ACxPlugin
 			try
 			{
 				Initialize();
+				CoreManager.Current.CharacterFilter.LoginComplete -= this.CharacterFilter_LoginComplete;
 			}
 			catch (Exception ex) { Utils.LogError(ex); }
 		}
 
-		private void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
-		{
-			try
-			{
-				Shutdown();
-			}
-			catch (Exception ex) { Utils.LogError(ex); }
-		}
+		//private void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
+		//{
+		//	try
+		//	{
+		//		Shutdown();
+		//	}
+		//	catch (Exception ex) { Utils.LogError(ex); }
+		//}
 
 
 		/// <summary>
@@ -82,8 +83,10 @@ namespace ACxPlugin
 				modules.Add(new SpellTabManager());
 				modules.Add(new ExperienceManager());
 				modules.Add(new LocationManager());
-				foreach (var m in modules)
-					m.Startup(this);
+				
+				//Start modules in order added
+				for (var i = 0; i < modules.Count; i++)
+					modules[i].Startup(this);
 
 				//Try to reload settings if Config/Profile has changed. Stop on success
 				reloadTimer = new Timer() { AutoReset = true, Enabled = false, Interval = TIME_BETWEEN_RELOAD_ATTEMPTS };
@@ -104,6 +107,14 @@ namespace ACxPlugin
 			try
 			{
 				Shutdown();
+			}
+			catch (Exception ex)
+			{
+				//File most likely in use
+				Utils.LogError(ex);
+			}
+			try
+			{
 				Initialize();
 				Utils.WriteToChat("Reloaded settings successfully.");
 			}
@@ -126,25 +137,29 @@ namespace ACxPlugin
 		{
 			Utils.AssemblyDirectory = pluginAssemblyDirectory;
 
-			Initialize();
+			//Initialize();
 
-			//Profile selection needs to be done when 
-			//If the player is logged in and the plugin is reloaded reinitialize
-			if (Utils.IsLoggedIn())
+			//Gate the multiple reloads the hot-reload feature was doing..?
+			var timeLapsedLastLoad = DateTime.Now - lastLoad;
+			if (timeLapsedLastLoad.TotalMilliseconds > TIME_BETWEEN_PLUGIN_RELOAD)
 			{
-				var timeLapsedLastLoad = DateTime.Now - lastLoad;
-				if (timeLapsedLastLoad.TotalMilliseconds > TIME_BETWEEN_PLUGIN_RELOAD)
-				{
-					Utils.WriteToChat($"Reloaded {timeLapsedLastLoad.TotalSeconds} seconds after last load");
-					lastLoad = DateTime.Now;
+				Utils.WriteToChat($"Reloaded {timeLapsedLastLoad.TotalSeconds} seconds after last load");
+				lastLoad = DateTime.Now;
 
+				//If the player is logged in and the plugin is reloaded reinitialize
+				if (Utils.IsLoggedIn())
 					Initialize();
-				}
+				//Otherwise initialize when logged in
+				else
+					CoreManager.Current.CharacterFilter.LoginComplete += this.CharacterFilter_LoginComplete;
 			}
 
+
+			//}
+
 			//Otherwise the plugin handles things on login
-			CoreManager.Current.CharacterFilter.LoginComplete += this.CharacterFilter_LoginComplete;
-			CoreManager.Current.CharacterFilter.Logoff += CharacterFilter_Logoff;			
+			//CoreManager.Current.CharacterFilter.LoginComplete += this.CharacterFilter_LoginComplete;
+			//CoreManager.Current.CharacterFilter.Logoff += CharacterFilter_Logoff;			
 		}
 
 		/// <summary>
@@ -154,9 +169,9 @@ namespace ACxPlugin
 		{
 			try
 			{
-				//Shutdown modules
-				foreach (var m in modules)
-					m.Shutdown();
+				//Shutdown modules in reverse order?
+				for (var i = modules.Count - 1; i >= 0; i--)
+					modules[i].Shutdown();
 				modules.Clear();
 
 				//Utils.WriteToChat("Removing timers...");
@@ -165,8 +180,8 @@ namespace ACxPlugin
 				reloadTimer.Elapsed -= TryReload;
 
 				//Remove login events
-				CoreManager.Current.CharacterFilter.LoginComplete -= CharacterFilter_LoginComplete;
-				CoreManager.Current.CharacterFilter.Logoff -= CharacterFilter_Logoff;
+				//CoreManager.Current.CharacterFilter.LoginComplete -= CharacterFilter_LoginComplete;
+				//CoreManager.Current.CharacterFilter.Logoff -= CharacterFilter_Logoff;
 			}
 			catch (Exception ex)
 			{

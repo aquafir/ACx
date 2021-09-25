@@ -57,9 +57,9 @@ namespace ACxPlugin
             var weightedCosts = new Dictionary<ExpTarget, double>();
             var policy = Plugin.Profile.ExpPolicy;
 
-			if(Utils.DEBUG) Utils.WriteToChat($"Creating a plan to spend {expToSpend} up to {maxSteps} times on {policy.Weights.Count} targets of exp.");
+			//if(Utils.DEBUG) Utils.WriteToChat($"Creating a plan to spend {expToSpend} up to {maxSteps} times on {policy.Weights.Count} targets of exp.");
 
-            if (Utils.DEBUG) Utils.WriteToChat($"Initial costs/weights/weighted costs:");
+            //if (Utils.DEBUG) Utils.WriteToChat($"Initial costs/weights/weighted costs:");
 			//Find what exp targets are candidates to be leveled
 			foreach (var t in policy.Weights)
             {

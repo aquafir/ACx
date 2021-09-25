@@ -30,14 +30,12 @@ namespace ACxPlugin
 		Log,
 		PartyNearby,
 		PN = PartyNearby,
-		//Pickup,
 		Plan,
 		Policy,
 		PrintLogins,
 		SaveSpells,
 		SS = SaveSpells,
-		//T,
-		//Test,
-
+		LoadLocation,
+		LL = LoadLocation,
 	}
 }
