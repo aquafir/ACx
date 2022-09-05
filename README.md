@@ -1,3 +1,7 @@
+# !!Deprecated!!
+
+The [login](https://ubstaging.surge.sh/master/docs/tools/loginmanagercommand/), [xp](https://utilitybelt.gitlab.io/docs/tools/autoxp/), and [spellbar management](https://ubstaging.surge.sh/master/docs/tools/spellmanager/) functionality have been added (and in some cases fixed/improved) to UtilityBelt (beta, for now).  That will be the preferred plugin in the future.
+
 # ACx
 
 Previously posted under [SillAC](https://github.com/sillAC/SillAC-Tools) before taking a long break.  The plugin has since been reworked using [trevis' hot-reload template](https://gitlab.com/trevis/HotDecalPluginTemplate), with a few improvements and a few things added.
